@@ -1,10 +1,17 @@
 import random as r
 
-
+PIPS = {
+        1: ("     ", "  0  ", "     "),
+        2: ("0    ", "     ", "    0"),
+        3: ("0    ", "  0  ", "    0"),
+        4: ("0   0", "     ", "0   0"),
+        5: ("0   0", "  0  ", "0   0"),
+        6: ("0   0", "0   0", "0   0"),
+    }
 class dice:
     def __init__(self):
         self.setOfDie = []
-        for x in range(1, 6):
+        for _ in range(1, 6):
             self.setOfDie.append(r.randint(1, 6))
         self.setOfDie.sort()
 
@@ -13,42 +20,15 @@ class dice:
         print("DICE ROLL: ")
         for x in range(1, 7):
             row = ""
-            for y in range(1, 6):
+            for y, die_value in enumerate(self.setOfDie, start=1):
+                pips = ""
                 if x == 6:
-                    row += " *Dice #%i: %i* " % (y, self.setOfDie[y - 1])
-                if x == 1:
-                    row += "  +-------+   "
-                if x == 2:
-                    if (
-                        (self.setOfDie[y - 1] == 4)
-                        or (self.setOfDie[y - 1] == 5)
-                        or (self.setOfDie[y - 1] == 6)
-                    ):
-                        row += "  | 0   0 |   "
+                    row += f" *Dice #{y}: {die_value}* "
+                else: 
+                    if x in [1, 5]:
+                        row += "  +-------+   "
                     else:
-                        row += "  | 0     |   "
-                if x == 3:
-                    if self.setOfDie[y - 1] == 6:
-                        row += "  | 0   0 |   "
-                    else:
-                        if (self.setOfDie[y - 1] == 3) or (self.setOfDie[y - 1] == 5):
-                            row += "  |   0   |   "
-                        else:
-                            row += "  |       |   "
-                if x == 4:
-                    if (
-                        (self.setOfDie[y - 1] == 4)
-                        or (self.setOfDie[y - 1] == 5)
-                        or (self.setOfDie[y - 1] == 6)
-                    ):
-                        row += "  | 0   0 |   "
-                    else:
-                        if (self.setOfDie[y - 1] == 2) or (self.setOfDie[y - 1] == 3):
-                            row += "  |     0 |   "
-                        else:
-                            row += "  |       |   "
-                if x == 5:
-                    row += "  +-------+   "
+                        row+= f"  | {PIPS[die_value][x-2]} |   "
             print(row)
         print("---")
 
