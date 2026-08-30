@@ -28,5 +28,5 @@ variable "environment" {
 
 
 locals {
-  repo_bucket = "${var.project_name}-${var.environment}-repo"
+  repo_bucket = "${var.project_name}-repo"
 }
