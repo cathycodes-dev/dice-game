@@ -17,20 +17,19 @@ if not numPlayers > 3:
         try:
             numAI = int(
                 input(
-                    "How many AI's do you want to play against?  (choose a number 0-%i): "
-                    % (4 - numPlayers)
+                    f"How many AI's do you want to play against?  (choose a number 0-{4 - numPlayers}): "
                 )
             )
         except ValueError:
             print("Error must type in a number value")
         else:
             if not 0 <= numAI <= (4 - numPlayers):
-                print("Please enter a number between 0 and %i" % (4 - numPlayers))
+                print(f"Please enter a number between 0 and {4 - numPlayers}")
 else:
     numAI = 0
 players = []
 for i in range(1, numPlayers + 1):
-    name = input("What is player %i's name? " % i)
+    name = input(f"What is player {i}'s name? ")
     players.append(p.Player(name))
 for i in range(1, numAI + 1):
     players.append(p.AI("", i))

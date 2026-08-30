@@ -37,14 +37,14 @@ class Player:
         print("---")
         for x in self.categories:
             if self.scores[x] == -1:
-                print("%s:  ---" % (x))
+                print(f"{x}:  ---")
             else:
-                print("%s:  %i" % (x, self.scores[x]))
+                print(f"{x}:  {self.scores[x]}")
         print(self.total)
         print("---")
 
     def take_turn(self, turn):
-        print(" It is now turn %i for %s." % (turn + 1, self.name))
+        print(f" It is now turn {turn + 1} for {self.name}.")
         self.die.print_set()
         self.select_die()
         self.die.print_set()
@@ -84,7 +84,7 @@ class Player:
             if category == 0:
                 j = 1
                 for x in self.dieScore.zero:
-                    print("#%i -- %s" % (j, x))
+                    print(f"# {j} -- {x}")
                     j += 1
                 try:
                     int_for_zero = int(

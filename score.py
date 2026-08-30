@@ -42,7 +42,7 @@ class score:
         self.zero = []
         for x in self.categories:
             if self.scores[x] > 0 and scoreCard.scores[x] == -1:
-                print("#%i-- %s: %i" % (i, x, self.scores[x]))
+                print(f"# {i}-- {x}: {self.scores[x]}")
                 i += 1
             else:
                 if scoreCard.scores[x] == -1:
