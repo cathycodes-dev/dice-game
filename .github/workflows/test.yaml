@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-  
-jobs: 
+
+jobs:
   validate:
     runs-on: ubuntu-latest
     env:
