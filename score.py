@@ -5,7 +5,7 @@ import constants as c
 class score:
     def __init__(self, roll):
         self.categories = c.UPPER_SECTION + c.LOWER_SECTION
-        self.scores = {x: None for x in self.categories}
+        self.scores = {}
         self.diceTotal = sum(roll)
 
         self.pair = False

@@ -1,6 +1,6 @@
 import random as r
 import constants as c
-class dice:
+class Dice:
     def __init__(self):
         self.setOfDie = []
         for _ in range(1, 6):
@@ -10,21 +10,19 @@ class dice:
     def print_set(self):
         print("---")
         print("DICE ROLL: ")
-        for x in range(1, 7):
-            row = ""
+        for line_num in range(1, 7):
+            line = ""
             for y, die_value in enumerate(self.setOfDie, start=1):
-                pips = ""
-                if x == 6:
-                    row += f" *Dice #{y}: {die_value}* "
-                else: 
-                    if x in [1, 5]:
-                        row += "  +-------+   "
-                    else:
-                        row+= f"  | {c.PIPS[die_value][x-2]} |   "
-            print(row)
+                if line_num == 6:
+                    line += f" *Dice #{y}: {die_value}* "
+                elif line_num in [1, 5]:
+                    line += "  +-------+   "
+                else:
+                    line+= f"  | {c.PIPS[die_value][line_num-2]} |   "
+            print(line)
         print("---")
 
-    def roll_nums(self, numSet="12345"):
+    def roll_dice(self, numSet="12345"):
         for x in range(0, 5):
             if str(x + 1) in numSet:
                 self.setOfDie.pop(x)

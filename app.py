@@ -32,7 +32,7 @@ for i in range(1, numPlayers + 1):
     name = input(f"What is player {i}'s name? ")
     players.append(p.Player(name))
 for i in range(1, numAI + 1):
-    players.append(p.AI("", i))
+    players.append(p.AI(i))
 for i in range(0, 13):
     for player in players:
         player.take_turn(i)

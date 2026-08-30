@@ -3,16 +3,12 @@ import score as s
 import constants as c
 
 class Player:
-    def __init__(self, name="", ai_num=0):
+    def __init__(self, name):
         self.name = name
-        self.die = d.dice()
-        if self.name == "":
-            self.name = "AI "
-            self.name += str(ai_num)
+        self.die = d.Dice()
         self.scores = {x: None for x in c.UPPER_SECTION + c.BONUS + c.LOWER_SECTION}
         self.total = 0
         self.dieScore = s.score(self.die.setOfDie)
-        self.topHalfTotal = 0
 
     def total_score(self):
         self.total = 0
@@ -56,13 +52,13 @@ class Player:
 
         self.select_score()
         self.print_score_card()
-        self.die.roll_nums()
+        self.die.roll_dice()
 
     def select_die(self):
         nums = input(
             "Which dice do you want to re-roll?  (press enter to not re-roll any die)"
         )
-        self.die.roll_nums(nums)
+        self.die.roll_dice(nums)
 
     def select_score(self):
         scored = False
@@ -108,5 +104,8 @@ class Player:
 
 
 class AI(Player):
+    def __init__(self, ai_num):
+        super().__init__(f"AI {ai_num}")
+
     def select_die(self):
-        self.die.roll_nums()
+        self.die.roll_dice()
