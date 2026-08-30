@@ -1,0 +1,115 @@
+name: "Deploy Game Files to S3"
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: terraform-state-lock
+  cancel-in-progress: false # Do not interrupt running applies mid-write
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-game:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: terraform
+      TF_WORKSPACE: dice-game
+      AWS_REGION: "us-east-1"
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    steps:
+      - name: Checkout Game Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/GitHubAction-AssumeRoleWithAction
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.0
+      
+      - name: Terraform Fmt
+        id: fmt
+        run: terraform fmt -check
+        working-directory: ${{ env.working-directory }}
+        continue-on-error: false
+
+      - name: Terraform init
+        id: init
+        run: terraform init -lock-timeout=2m
+        working-directory: ${{ env.working-directory }}
+        env:
+          TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+        working-directory: ${{ env.working-directory }}
+
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color
+        working-directory: ${{ env.working-directory }}
+        env:
+          TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
+
+      - name: Plan output
+        id: output
+        uses: actions/github-script@v3
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            ### Workspace
+
+            \`${process.env.TF_WORKSPACE}\`
+
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+
+            \`\`\`hcl
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            **Pusher**: @${{ github.actor }}
+            **Action**: ${{ github.event_name }}
+            `;
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Terraform apply
+        id: apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+        working-directory: ${{ env.working-directory }}
+        env:
+          TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
+
+      - name: Sync Site to S3
+        run: aws s3 sync site/ s3://cathycodes.com --delete
+
+      - name: Invalidate current CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id E1SD6W87BWGMF7 --paths "/*"
+
+      # Target ONLY main.py so existing index.html in S3 is untouched
+      - name: Sync Game to S3
+        run: aws s3 sync . s3://${{ secrets.AWS_S3_BUCKET }} --exclude ".git/*" --exclude ".github/*" --acl public-read
