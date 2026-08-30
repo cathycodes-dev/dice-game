@@ -5,10 +5,9 @@ import constants as c
 class score:
     def __init__(self, roll):
         self.categories = c.UPPER_SECTION + c.LOWER_SECTION
-        self.scores = {x: -1 for x in self.categories}
-        self.diceTotal = 0
-        for i in roll:
-            self.diceTotal += i
+        self.scores = {x: None for x in self.categories}
+        self.diceTotal = sum(roll)
+
         self.pair = False
         self.three = False
         self.straight = 0
@@ -41,11 +40,10 @@ class score:
         i = 1
         self.zero = []
         for x in self.categories:
-            if self.scores[x] > 0 and scoreCard.scores[x] == -1:
+            if self.scores.get(x, 0) > 0 and scoreCard.scores[x] is None:
                 print(f"# {i}-- {x}: {self.scores[x]}")
                 i += 1
-            else:
-                if scoreCard.scores[x] == -1:
-                    self.zero.append(x)
+            elif scoreCard.scores[x] is None:
+                self.zero.append(x)
         if len(self.zero) > 0:
             print("    or #0-- to view the areas where you can score zero points")

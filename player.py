@@ -9,8 +9,7 @@ class Player:
         if self.name == "":
             self.name = "AI "
             self.name += str(ai_num)
-        self.categories = c.UPPER_SECTION + c.BONUS + c.LOWER_SECTION
-        self.scores = {x: -1 for x in self.categories}
+        self.scores = {x: None for x in c.UPPER_SECTION + c.BONUS + c.LOWER_SECTION}
         self.total = 0
         self.dieScore = s.score(self.die.setOfDie)
         self.topHalfTotal = 0
@@ -18,25 +17,18 @@ class Player:
     def total_score(self):
         self.total = 0
         for x in c.UPPER_SECTION:
-            if self.scores[x] != -1:
-                self.total += self.scores[x]
+            self.total += self.scores.get(x, 0)
         if self.total > 63:
-            if self.scores["upper_bonus"] == -1:
-                self.scores["upper_bonus"] = 35
-            else:
-                self.scores["upper_bonus"] += 35
-        for x in [
-            *c.BONUS,
-            *c.LOWER_SECTION
-        ]:
-            if self.scores[x] != -1:
-                self.total += self.scores[x]
+            self.scores["upper_bonus"] = 35
+
+        for x in c.BONUS + c.LOWER_SECTION:
+            self.total += self.scores.get(x, 0)
         return self.total
 
     def print_score_card(self):
         print("---")
-        for x in self.categories:
-            if self.scores[x] == -1:
+        for x in self.scores.keys():
+            if self.scores[x] is None:
                 print(f"{x}:  ---")
             else:
                 print(f"{x}:  {self.scores[x]}")
@@ -51,15 +43,17 @@ class Player:
         self.select_die()
         self.die.print_set()
         self.dieScore = s.score(self.die.setOfDie)
+
         # check if bonus Yahtzee
         if (
             self.die.setOfDie.count(self.die.setOfDie[1]) == 5
             and self.scores["Yahtzee"] == 50
         ):
-            if self.scores["five_bonus"] == -1:
+            if self.scores["five_bonus"] == None:
                 self.scores["five_bonus"] = 100
             else:
                 self.scores["five_bonus"] += 100
+
         self.select_score()
         self.print_score_card()
         self.die.roll_nums()
@@ -103,22 +97,14 @@ class Player:
                         break
                     j += 1
             i = 1
-            for x in self.dieScore.categories:
-                if self.dieScore.scores[x] > 0 and self.scores[x] == -1:
-                    if category == i:
-                        self.scores[x] = self.dieScore.scores[x]
-                        scored = True
-                        self.total += self.dieScore.scores[x]
-                        if category in c.UPPER_SECTION:
-                            if self.topHalfTotal < 63:
-                                self.topHalfTotal += self.dieScore.scores[x]
-                                if self.topHalfTotal < 63:
-                                    if self.scores["upper_bonus"] == -1:
-                                        self.scores["upper_bonus"] = 35
-                                    else:
-                                        self.scores["upper_bonus"] += 35
-                        break
-                    i += 1
+            if category is not None and category > 0:
+                for x in self.dieScore.categories:
+                    if self.dieScore.scores.get(x, 0) > 0:
+                        if category == i:
+                            self.scores[x] = self.dieScore.scores[x]
+                            scored = True
+                            break
+                        i += 1
 
 
 class AI(Player):
