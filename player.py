@@ -1,6 +1,6 @@
 import dice as d
 import score as s
-
+import constants as c
 
 class Player:
     def __init__(self, name="", ai_num=0):
@@ -9,22 +9,7 @@ class Player:
         if self.name == "":
             self.name = "AI "
             self.name += str(ai_num)
-        self.categories = [
-            "ones",
-            "twos",
-            "threes",
-            "fours",
-            "fives",
-            "sixes",
-            "bonus",
-            "Three of a kind",
-            "Four of a kind",
-            "Full house",
-            "Small straight",
-            "Large straight",
-            "Chance",
-            "Yahtzee",
-        ]
+        self.categories = c.UPPER_SECTION + c.BONUS + c.LOWER_SECTION
         self.scores = {x: -1 for x in self.categories}
         self.total = 0
         self.dieScore = s.score(self.die.setOfDie)
@@ -32,23 +17,17 @@ class Player:
 
     def total_score(self):
         self.total = 0
-        for x in ["ones", "twos", "threes", "fours", "fives", "sixes"]:
+        for x in c.UPPER_SECTION:
             if self.scores[x] != -1:
                 self.total += self.scores[x]
         if self.total > 63:
-            if self.scores["bonus"] == -1:
-                self.scores["bonus"] = 35
+            if self.scores["upper_bonus"] == -1:
+                self.scores["upper_bonus"] = 35
             else:
-                self.scores["bonus"] += 35
+                self.scores["upper_bonus"] += 35
         for x in [
-            "bonus",
-            "Three of a kind",
-            "Four of a kind",
-            "Full house",
-            "Small straight",
-            "Large straight",
-            "Chance",
-            "Yahtzee",
+            *c.BONUS,
+            *c.LOWER_SECTION
         ]:
             if self.scores[x] != -1:
                 self.total += self.scores[x]
@@ -77,10 +56,10 @@ class Player:
             self.die.setOfDie.count(self.die.setOfDie[1]) == 5
             and self.scores["Yahtzee"] == 50
         ):
-            if self.scores["bonus"] == -1:
-                self.scores["bonus"] = 100
+            if self.scores["five_bonus"] == -1:
+                self.scores["five_bonus"] = 100
             else:
-                self.scores["bonus"] += 100
+                self.scores["five_bonus"] += 100
         self.select_score()
         self.print_score_card()
         self.die.roll_nums()
@@ -130,21 +109,14 @@ class Player:
                         self.scores[x] = self.dieScore.scores[x]
                         scored = True
                         self.total += self.dieScore.scores[x]
-                        if category in [
-                            "ones",
-                            "twos",
-                            "threes",
-                            "fours",
-                            "fives",
-                            "sixes",
-                        ]:
+                        if category in c.UPPER_SECTION:
                             if self.topHalfTotal < 63:
                                 self.topHalfTotal += self.dieScore.scores[x]
                                 if self.topHalfTotal < 63:
-                                    if self.scores["bonus"] == -1:
-                                        self.scores["bonus"] = 35
+                                    if self.scores["upper_bonus"] == -1:
+                                        self.scores["upper_bonus"] = 35
                                     else:
-                                        self.scores["bonus"] += 35
+                                        self.scores["upper_bonus"] += 35
                         break
                     i += 1
 

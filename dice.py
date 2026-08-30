@@ -1,13 +1,5 @@
 import random as r
-
-PIPS = {
-        1: ("     ", "  0  ", "     "),
-        2: ("0    ", "     ", "    0"),
-        3: ("0    ", "  0  ", "    0"),
-        4: ("0   0", "     ", "0   0"),
-        5: ("0   0", "  0  ", "0   0"),
-        6: ("0   0", "0   0", "0   0"),
-    }
+import constants as c
 class dice:
     def __init__(self):
         self.setOfDie = []
@@ -28,7 +20,7 @@ class dice:
                     if x in [1, 5]:
                         row += "  +-------+   "
                     else:
-                        row+= f"  | {PIPS[die_value][x-2]} |   "
+                        row+= f"  | {c.PIPS[die_value][x-2]} |   "
             print(row)
         print("---")
 

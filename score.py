@@ -1,23 +1,10 @@
-import player as sc
+import player as p
+import constants as c
 
 
 class score:
     def __init__(self, roll):
-        self.categories = [
-            "ones",
-            "twos",
-            "threes",
-            "fours",
-            "fives",
-            "sixes",
-            "Three of a kind",
-            "Four of a kind",
-            "Full house",
-            "Small straight",
-            "Large straight",
-            "Chance",
-            "Yahtzee",
-        ]
+        self.categories = c.UPPER_SECTION + c.LOWER_SECTION
         self.scores = {x: -1 for x in self.categories}
         self.diceTotal = 0
         for i in roll:
