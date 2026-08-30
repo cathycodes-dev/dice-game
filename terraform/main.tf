@@ -8,8 +8,6 @@ terraform {
 
   backend "s3" {
     bucket         = "cathycodes-terraform-state"
-    key            = "${var.project_name}/terraform.tfstate"
-    region         = var.region
     dynamodb_table = "terraform-locks"
     encrypt        = true
   }
