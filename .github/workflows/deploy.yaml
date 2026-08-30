@@ -9,7 +9,7 @@ concurrency:
   group: terraform-state-lock
   cancel-in-progress: false # Do not interrupt running applies mid-write
 
-permission:
+permissions:
   id-token: write
   contents: read
 
