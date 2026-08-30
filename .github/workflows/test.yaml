@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: terraform
-      TF_WORKSPACE: dice game
+      TF_WORKSPACE: dice-game
       AWS_REGION: "us-east-1"
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 

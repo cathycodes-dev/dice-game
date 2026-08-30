@@ -5,24 +5,24 @@ terraform {
       version = "4.64.0"
     }
   }
-  
+
   backend "s3" {
     bucket         = "cathycodes-terraform-state"
     key            = "${var.project_name}/terraform.tfstate"
-    region         = "us-east-1"
+    region         = var.region
     dynamodb_table = "terraform-locks"
     encrypt        = true
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 
   default_tags {
     tags = {
-      Owner       = "${var.owner}"
-      Project     = "${var.project_name}"
-      Environment = "${var.environment}"
+      Owner       = var.owner
+      Project     = var.project_name
+      Environment = var.environment
     }
   }
 }

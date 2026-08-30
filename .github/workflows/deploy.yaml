@@ -112,4 +112,4 @@ jobs:
 
       # Target ONLY main.py so existing index.html in S3 is untouched
       - name: Sync Game to S3
-        run: aws s3 sync . s3://${{ secrets.AWS_S3_BUCKET }} --exclude ".git/*" --exclude ".github/*" --acl public-read
+        run: aws s3 sync dice-game/ s3://${{ secrets.AWS_S3_BUCKET }} --delete
