@@ -35,7 +35,7 @@ provider "aws" {
 # 1. Look up existing wildcard certificate created by main site
 data "aws_acm_certificate" "wildcard" {
   provider    = aws.us_east_1
-  domain      = "*.cathycodes.com"
+  domain      = "cathycodes.com"
   statuses    = ["ISSUED"]
   most_recent = true
 }
