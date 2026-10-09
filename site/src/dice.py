@@ -2,7 +2,6 @@ import random as r
 import constants as c
 from collections import Counter, OrderedDict
 
-
 class Dice:
     def __init__(self):
         self.die_set = []
@@ -40,6 +39,7 @@ class Dice:
 
     def calculate_score(self):
         self.scores = OrderedDict()
+        self.zeros = []
 
         diceTotal = sum(self.die_set)
         counts = Counter(self.die_set)
@@ -89,16 +89,10 @@ class Dice:
 
         if i == 1:
             print("No available scores. Press 0 to view zero-score options.")
+        self.zeros = [category for category in self.zeros if current_scores.get(category, None) is None]
         if len(self.zeros) > 0:
             print("    or #0 -- to view the areas where you can score zero points")
 
     def print_zeros(self):
         for x, category in enumerate(self.zeros, 1):
             print(f"#{x} -- {category}: 0")
-            self.die_set.pop(x)
-            self.die_set.insert(x, r.randint(1, 6))
-        # Manual roll of dice for code
-        # self.setOfDie = [4, 4, 4, 4, 4]  # Example manual roll
-
-        self.score_outdated = True
-        self.die_set.sort()

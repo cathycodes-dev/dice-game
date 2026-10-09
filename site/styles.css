@@ -1,0 +1,347 @@
+:root {
+    --dark-background: #033f74;
+    --title: #b7b7b7;
+    --background: #e6faff;
+    --header: #123aa8;
+    --body: #242323;
+    --icons: #02123e;
+    --logo-font: #3263eb;
+}
+
+@font-face {
+    font-family: CathyCodes;
+    src: url(assets/CathyCodes-1-Regular.otf);
+}
+
+/* Global Style */
+body {
+    font-family: Calibri, sans-serif;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: var(--background);
+    font-weight: normal;
+    font-family: CathyCodes, Calibri, sans-serif;
+    font-size: 2rem;
+}
+
+/* Layout */
+.container {
+    width: clamp(300px, 85vw, 1000px);
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+h1 {
+    margin: auto;
+    color: var(--logo-font);
+    font-size: 4rem;
+    text-align: center;
+    font-weight: normal;
+    font-family: CathyCodes, Calibri, sans-serif;
+}
+
+h2 {
+    color: var(--header);
+    border-bottom: 2px solid var(--header);
+    font-size: 2.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-family: CathyCodes, Calibri, sans-serif;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin: .1rem 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    background-color: var(--logo-font);
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 22pt;
+    font-family: CathyCodes, Calibri, sans-serif;
+}
+
+.role-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.25rem;
+}
+
+.dates {
+    font-size: 1rem;
+    color: #6b7280;
+    white-space: nowrap;
+    font-style: italic;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--icons);
+    font-size: 0.9rem;
+}
+
+.footer img {
+    height: 40px;
+    width: auto;
+}
+
+.footer a {
+    text-decoration: none;
+}
+
+/*certifications*/
+.cert-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1rem;
+}
+
+.cert-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+}
+
+.cert-badge {
+    width: 100px;
+    height: auto;
+    transition: transform 0.2s ease;
+}
+
+.cert-badge-link:hover .cert-badge {
+    transform: scale(1.05);
+}
+
+.cert-info {
+    flex: 1;
+}
+
+.cert-meta {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.verify-link {
+    font-size: 0.85rem;
+    color: var(--header);
+    text-decoration: none;
+}
+
+.verify-link:hover {
+    text-decoration: underline;
+}
+
+
+/* ---------------------- */
+/* NAVIGATION BAR STYLES  */
+/* ---------------------- */
+
+.nav-container {
+    width: clamp(300px, 95vw, 1100px);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5rem;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    width: clamp(100px, 25vw, 250px);
+    padding: .5rem;
+}
+
+/* ---------------------- */
+/* PDF DISPLAY            */
+/* ---------------------- */
+
+
+.pdf-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
+}
+
+.pdf-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.viewer {
+    width: 100%;
+    min-height: 60vh;
+    border: 2px solid var(--title);
+    border-radius: 6px;
+}
+
+/* ------------------------- */
+/* DESKTOP SPECIFIC BEHAVIOR */
+/* ------------------------- */
+
+@media (min-width: 701px) {
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .nav-links a {
+        color: white;
+        background-color: var(--dark-background);
+        padding: 0.5rem 0.9rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .viewer {
+        min-height: 600px;
+    }
+
+    /* Don't display hamburger bar on desktop */
+    .hamburger {
+        display: none;
+    }
+}
+
+/* ==========================================
+   Retro Terminal Container Styles
+   ========================================== */
+
+/* Outer wrapper to center the terminal on the page */
+.terminal-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Force the terminal container to take specific or full dimensions */
+.terminal {
+    width: clamp(300px, 95vw, 900px);
+    background-color: #111111;
+    border: 6px solid #00ff00;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Ensures Xterm internal canvas fits inside the border bounds perfectly */
+#terminal .xterm {
+    height: 100%;
+    padding: 1rem;
+}
+
+/* Custom scrollbar matching retro dark theme */
+#terminal .xterm-viewport::-webkit-scrollbar {
+    width: 8px;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-track {
+    background: #111111;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb {
+    background: #008800;
+    border-radius: 4px;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: #00ff00;
+}
+
+/* ------------------------ */
+/* MOBILE SPECIFIC BEHAVIOR */
+/* ------------------------ */
+
+@media (max-width: 700px) {
+
+    .hamburger {
+        flex-direction: column;
+        gap: 4px;
+        display: flex;
+        background-color: var(--dark-background);
+        padding: 1rem;
+        border-radius: 6px;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--dark-background);
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem;
+    }
+
+    .nav-links a {
+        padding: 0.5rem 0;
+        text-decoration: none;
+        color: white;
+    }
+
+    /* When menu is open (JS adds .nav-open) */
+    .nav-links.nav-open {
+        display: flex;
+    }
+
+    .bar1, .bar2, .bar3 {
+        display: block;
+        width: 28px;
+        height: 4px;
+        background: white;
+        border-radius: 2px;
+    }
+
+    /* Change to X on click */
+    .change .bar1 {
+        transform: translate(0, 8px) rotate(-45deg);
+    }
+
+    .change .bar2 {
+        opacity: 0;
+    }
+
+    .change .bar3 {
+        transform: translate(0, -8px) rotate(45deg);
+    }
+
+    .cert-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .cert-header {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .terminal {
+        width: 90vw;
+    }
+
+}

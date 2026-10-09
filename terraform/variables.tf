@@ -26,7 +26,12 @@ variable "environment" {
   }
 }
 
+variable "domain" {
+  type    = string
+  default = "cathycodes.com"
+}
+
 
 locals {
-  repo_bucket = "${var.project_name}-repo"
+  site = "${var.project_name}.${var.domain}"
 }

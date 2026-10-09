@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dice Game | Cathy Codes</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/codes_logos/simplified.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+</head>
+
+<!-- Default Navigation Bar and Footer Components -->
+<header id="nav-bar" class="nav-bar"></header>
+<script>
+    async function loadHeader() {
+        const res = await fetch("components/nav-bar.html");
+        const html = await res.text();
+        document.getElementById("nav-bar").innerHTML = html;
+    }
+    loadHeader();
+    function toggleMenu(x) {
+        const nav = document.querySelector(".nav-links");
+        x.classList.toggle("change");
+        nav.classList.toggle("nav-open");
+    }
+</script>
+
+
+<body>
+    <div class="container">
+        <h1>Dice Game</h1>
+
+        <section id="about">
+            <p>Welcome to the Dice Game! Use the terminal below to interact with the game.</p>
+            <p> This is a python script that runs in the browser using Pyodide. See the code for this project:
+                <a href="https://github.com/cathycodes-dev/dice-game" target="_blank">GitHub Repository</a>
+            </p>
+        </section>
+    </div>
+    </p>
+    <div class="terminal-container">
+
+        <div id="terminal"></div>
+    </div>
+
+    <script>
+        // Terminal Initialization
+        const term = new Terminal({
+            cursorBlink: true,
+            theme: { background: '#111', foreground: '#00ff00' }
+        });
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+        term.open(document.getElementById('terminal'));
+        fitAddon.fit();
+        window.addEventListener('resize', () => fitAddon.fit());
+
+        // Project Modules: add future modules as needed
+        const pythonModules = [
+            'async_helper.py',
+            'constants.py',
+            'dice.py',
+            'player.py'
+        ];
+        const projectBasePath = './src';
+
+        async function loadPythonModules(pyodide) {
+            for (const file of pythonModules) {
+                term.write(`Loading module: ${file}...\r\n`);
+                const response = await fetch(`${projectBasePath}/${file}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${file} (HTTP ${response.status})`);
+                }
+                const code = await response.text();
+                pyodide.FS.writeFile(file, code);
+            }
+        }
+
+        // Xterm.js Native Input Reader (Handles typing directly in terminal)
+        function readTerminalInput() {
+            return new Promise((resolve) => {
+                let currentLine = "";
+
+                const disposable = term.onData((data) => {
+                    const code = data.charCodeAt(0);
+
+                    if (code === 13) { // Enter key
+                        term.write('\r\n');
+                        disposable.dispose();
+                        resolve(currentLine + "\n");
+                    } else if (code === 127) { // Backspace (DEL)
+                        if (currentLine.length > 0) {
+                            currentLine = currentLine.slice(0, -1);
+                            term.write('\b \b');
+                        }
+                    } else if (code >= 32) { // Printable characters
+                        currentLine += data;
+                        term.write(data);
+                    }
+                });
+            });
+        }
+
+        async function main() {
+            try {
+                term.write('Loading Pyodide WebAssembly runtime...\r\n');
+                let pyodide = await loadPyodide();
+
+                // Direct output stream character by character to Xterm
+                pyodide.setStdout({
+                    raw: (charCode) => {
+                        const char = String.fromCharCode(charCode);
+                        term.write(char === '\n' ? '\r\n' : char);
+                    }
+                });
+
+                // Load all supporting module files
+                await loadPythonModules(pyodide);
+
+                // Force Python unbuffered stdout
+                await pyodide.runPythonAsync(`
+                    import sys
+                    sys.stdout.reconfigure(line_buffering=True)
+                `);
+
+                // Hook Python input() into Xterm's async key reader
+                pyodide.setStdin({
+                    stdin: () => {
+                        throw new Error("Use async input wrapper");
+                    }
+                });
+
+                // Fetch and run main entry point
+                term.write('Loading main game script...\r\n');
+                const mainResponse = await fetch(`${projectBasePath}/main.py`);
+                const mainCode = await mainResponse.text();
+
+                term.write('Starting game...\r\n\n');
+
+                // Save main.py to Pyodide filesystem
+                pyodide.FS.writeFile('main.py', mainCode);
+
+                // Execute directly via await since Pyodide is already running in an event loop
+                await pyodide.runPythonAsync(`
+                    import main
+                    await main.play_game()
+                `);
+
+            } catch (err) {
+                term.write(`\r\n\x1b[31mError: ${err.message}\x1b[0m\r\n`);
+                console.error(err);
+            }
+        }
+
+        main();
+    </script>
+</body>
+
+<footer id="footer"></footer>
+<script>
+    async function loadFooter() {
+        const res = await fetch("components/footer.html");
+        const html = await res.text();
+        document.getElementById("footer").innerHTML = html;
+    }
+    loadFooter();
+</script>
+
+</html>
