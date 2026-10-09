@@ -28,6 +28,24 @@ provider "aws" {
 }
 
 # ==========================================
+# Data Lookups (Read-Only / No Cost)
+# ==========================================
+
+# 1. Look up existing wildcard certificate created by main site
+data "aws_acm_certificate" "wildcard" {
+  provider    = aws.us_east_1
+  domain      = "*.cathycodes.com"
+  statuses    = ["ISSUED"]
+  most_recent = true
+}
+
+# 2. Look up existing Route 53 Hosted Zone
+data "aws_route53_zone" "main" {
+  name         = var.domain
+  private_zone = false
+}
+
+# ==========================================
 # S3 Static Hosting Bucket & Policies
 # ==========================================
 resource "aws_s3_bucket" "website" {
@@ -109,6 +127,7 @@ resource "aws_cloudfront_distribution" "website" {
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+    compress               = true
   }
 
   restrictions {
@@ -118,6 +137,24 @@ resource "aws_cloudfront_distribution" "website" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = data.aws_acm_certificate.wildcard.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
+}
+
+# ==========================================
+# Route 53 Alias Record (Free for Alias to CloudFront)
+# ==========================================
+
+resource "aws_route53_record" "website" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = local.site
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.website.domain_name
+    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+    evaluate_target_health = false
   }
 }
