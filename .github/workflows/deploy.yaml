@@ -24,6 +24,7 @@ jobs:
 
     env:
       PROJECT_NAME: dice-game
+      DOMAIN: cathycodes.com
       AWS_REGION: us-east-1
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
@@ -67,40 +68,6 @@ jobs:
         env:
           TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
 
-      - name: Plan output
-        id: output
-        uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            ### Workspace
-
-            \`${process.env.TF_WORKSPACE}\`
-
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            <details><summary>Show Plan</summary>
-
-            \`\`\`hcl
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>
-
-            **Pusher**: @${{ github.actor }}
-            **Action**: ${{ github.event_name }}
-            `;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
-
       - name: Terraform apply
         id: apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -108,6 +75,6 @@ jobs:
         env:
           TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
 
-      - name: Sync Game to S3
-        run: aws s3 sync ${{ env.PROJECT_NAME }}-/ s3://${{ env.PROJECT_NAME }}-repo/${{ env.PROJECT_NAME }}-/ --delete
+      - name: Sync Game Code to S3
+        run: aws s3 sync site/ s3://${{ env.PROJECT_NAME }}.${{DOMAIN}}/ --delete
         working-directory: .
