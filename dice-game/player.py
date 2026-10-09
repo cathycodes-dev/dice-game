@@ -1,5 +1,10 @@
+
 import dice as d
 import constants as c
+from async_helper import input_async
+
+
+import asyncio
 
 
 class Player:
@@ -32,39 +37,41 @@ class Player:
         print(self.total)
         print("---")
 
-    def take_turn(self, turn):
+    async def take_turn(self, turn):
         print(f" It is now turn {turn + 1} for {self.name}.")
 
         print(f"Roll 1 for {self.name}")
         self.die.print_set()
-        self.reroll_die()
+        await self.reroll_die()
 
         print(f"Roll 2 for {self.name}")
         self.die.print_set()
-        self.reroll_die()
+        await self.reroll_die()
 
         print(f"Roll 3 for {self.name}")
         self.die.print_set()
         self.die.calculate_score()
 
-        self.select_score()
+        await self.select_score()
         self.print_score_card()
         self.die.roll_dice()
 
-    def reroll_die(self):
-        nums = input(
+        await asyncio.sleep(0.1)
+
+    async def reroll_die(self):
+        nums = await input_async(
             "Which dice do you want to re-roll?  (press enter to not re-roll any die)"
         )
         self.die.roll_dice(nums)
 
-    def select_score(self):
+    async def select_score(self):
         scored = False
         while not scored:
             print("You can score ---")
             self.die.print_score(self.scores)
 
             try:
-                num_category = int(input("Which do you want to score?"))
+                num_category = int(await input_async("Which do you want to score?"))
             except ValueError as _:
                 print("Error must type in a number value")
                 num_category = None
@@ -75,8 +82,8 @@ class Player:
                     print(f"# {j} -- {x}")
                     j += 1
                 try:
-                    int_for_zero = int(
-                        input(
+                    int_for_zero = int(await
+                        input_async(
                             "Which do you want to score? (0 to return to other scoring options)"
                         )
                     )
@@ -103,10 +110,10 @@ class AI(Player):
     def __init__(self, ai_num):
         super().__init__(f"AI {ai_num}")
 
-    def reroll_die(self):
+    async def reroll_die(self):
         self.die.roll_dice()
 
-    def select_score(self):
+    async def select_score(self):
         self.die.calculate_score()
         max_score = 0
         max_category = None
@@ -130,4 +137,4 @@ class AI(Player):
                 if self.scores.get(category, None) is None:
                     print(f"{self.name} scores 0 in {category}")
                     self.scores[category] = 0
-            
+        return 
