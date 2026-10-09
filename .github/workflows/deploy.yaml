@@ -76,5 +76,5 @@ jobs:
           TF_VAR_assume_role: "GitHubAction-AssumeRoleWithAction"
 
       - name: Sync Game Code to S3
-        run: aws s3 sync site/ s3://${{ env.PROJECT_NAME }}.${{DOMAIN}}/ --delete
+        run: aws s3 sync site/ s3://${{ env.PROJECT_NAME }}.${{ env.DOMAIN }}/ --delete
         working-directory: .
