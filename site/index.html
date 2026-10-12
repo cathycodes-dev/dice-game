@@ -52,7 +52,11 @@
         // Terminal Initialization
         const term = new Terminal({
             cursorBlink: true,
-            theme: { background: '#111', foreground: '#00ff00' }
+            theme: {
+                background: '#02123e', // var(--icons)
+                foreground: '#e6faff', // var(--background)
+                cursor: '#3263eb'     // var(--logo-font)
+            }
         });
         const fitAddon = new FitAddon.FitAddon();
         term.loadAddon(fitAddon);

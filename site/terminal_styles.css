@@ -14,37 +14,32 @@
 }
 
 /* Force the terminal container to take specific or full dimensions */
-.terminal {
-    width: clamp(300px, 95vw, 900px);
-    background-color: #111111;
-    border: 6px solid #00ff00;
+#terminal {
+    width: clamp(300px, 95vw, 700px);
+    border: 6px solid var(--header);
     border-radius: 6px;
     box-sizing: border-box;
 }
 
 /* Ensures Xterm internal canvas fits inside the border bounds perfectly */
 #terminal .xterm {
-    height: 100%;
     padding: 1rem;
 }
 
-/* Custom scrollbar matching retro dark theme */
-#terminal .xterm-viewport::-webkit-scrollbar {
+/* Overrides for Xterm.js scrollbar */
+.xterm-viewport::-webkit-scrollbar {
     width: 8px;
 }
 
-#terminal .xterm-viewport::-webkit-scrollbar-track {
-    background: #111111;
+.xterm-viewport::-webkit-scrollbar-track {
+    background: var(--icons);
 }
 
-#terminal .xterm-viewport::-webkit-scrollbar-thumb {
-    background: #008800;
+.xterm-viewport::-webkit-scrollbar-thumb {
+    background: var(--dark-background);
     border-radius: 4px;
 }
 
-#terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
-    background: #00ff00;
-}
 
 /* ------------------------ */
 /* MOBILE SPECIFIC BEHAVIOR */
