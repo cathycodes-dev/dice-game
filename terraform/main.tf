@@ -16,6 +16,7 @@ terraform {
 
 provider "aws" {
   region = var.region
+  alias  = "us_east_1"
 
   default_tags {
     tags = {
@@ -34,7 +35,7 @@ provider "aws" {
 # 1. Look up existing wildcard certificate created by main site
 data "aws_acm_certificate" "wildcard" {
   provider    = aws.us_east_1
-  domain      = "*.cathycodes.com"
+  domain      = "cathycodes.com"
   statuses    = ["ISSUED"]
   most_recent = true
 }
@@ -45,9 +46,20 @@ data "aws_route53_zone" "main" {
   private_zone = false
 }
 
+# 3. Look up CloudFront Managed Caching Policy by name
+data "aws_cloudfront_cache_policy" "caching_optimized" {
+  name = "Managed-CachingOptimized"
+}
+
+# 4. Look up CloudFront Managed CORS Policy by name
+data "aws_cloudfront_response_headers_policy" "cors_with_preflight" {
+  name = "Managed-CORS-With-Preflight"
+}
+
 # ==========================================
 # S3 Static Hosting Bucket & Policies
 # ==========================================
+
 resource "aws_s3_bucket" "website" {
   bucket        = local.site
   force_destroy = false
@@ -91,6 +103,7 @@ data "aws_iam_policy_document" "s3_cloudfront_policy" {
 # ==========================================
 # CloudFront CDN Distribution
 # ==========================================
+
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "${local.site}-oac"
   description                       = "OAC for ${local.site} static website"
@@ -106,6 +119,8 @@ resource "aws_cloudfront_distribution" "website" {
   comment             = "CloudFront distribution for static portfolio site"
   aliases             = [local.site]
 
+  price_class = "PriceClass_100"
+
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
     origin_id                = "S3-${aws_s3_bucket.website.id}"
@@ -117,17 +132,10 @@ resource "aws_cloudfront_distribution" "website" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "S3-${aws_s3_bucket.website.id}"
 
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
+    cache_policy_id            = data.aws_cloudfront_cache_policy.caching_optimized.id
+    response_headers_policy_id = data.aws_cloudfront_response_headers_policy.cors_with_preflight.id
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
     compress               = true
   }
 
@@ -145,7 +153,7 @@ resource "aws_cloudfront_distribution" "website" {
 }
 
 # ==========================================
-# Route 53 Alias Record (Free for Alias to CloudFront)
+# Route 53 Alias Record
 # ==========================================
 
 resource "aws_route53_record" "website" {
