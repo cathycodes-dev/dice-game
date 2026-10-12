@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "website" {
   is_ipv6_enabled     = true
   default_root_object = "index.html"
   comment             = "CloudFront distribution for static portfolio site"
-  aliases = [local.site]
+  aliases             = [local.site]
 
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
