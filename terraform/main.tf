@@ -15,6 +15,7 @@ terraform {
 }
 
 provider "aws" {
+  alias  = "us_east_1"
   region = var.region
   alias  = "us_east_1"
 
