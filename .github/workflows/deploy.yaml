@@ -81,5 +81,5 @@ jobs:
 
       - name: Invalidate CloudFront Cache
         run: |
-          DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=`null` && contains(Aliases.Items, 'dice-game.cathycodes.com')].Id" --output text)
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, 'dice-game.cathycodes.com')].Id | [0]" --output text)
           aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
