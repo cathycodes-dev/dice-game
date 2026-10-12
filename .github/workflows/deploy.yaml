@@ -78,3 +78,8 @@ jobs:
       - name: Sync Game to S3
         run: aws s3 sync ${{ env.PROJECT_NAME }}/ s3://${{ env.PROJECT_NAME }}-repo/${{ env.PROJECT_NAME }}/ --delete
         working-directory: .
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=`null` && contains(Aliases.Items, 'dice-game.cathycodes.com')].Id" --output text)
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
