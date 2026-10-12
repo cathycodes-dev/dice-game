@@ -1,0 +1,52 @@
+/* ------------------------ */
+/* RETRO TERMINAL STYLE     */
+/* ------------------------ */
+
+/* Outer wrapper to center the terminal on the page */
+.terminal-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Force the terminal container to take specific or full dimensions */
+#terminal {
+    width: clamp(300px, 95vw, 700px);
+    border: 6px solid var(--header);
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Ensures Xterm internal canvas fits inside the border bounds perfectly */
+#terminal .xterm {
+    padding: 1rem;
+}
+
+/* Overrides for Xterm.js scrollbar */
+.xterm-viewport::-webkit-scrollbar {
+    width: 8px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+    background: var(--icons);
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+    background: var(--dark-background);
+    border-radius: 4px;
+}
+
+
+/* ------------------------ */
+/* MOBILE SPECIFIC BEHAVIOR */
+/* ------------------------ */
+
+@media (max-width: 700px) {
+    .terminal {
+        width: 90vw;
+    }
+}

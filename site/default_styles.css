@@ -13,7 +13,6 @@
     src: url(assets/CathyCodes-1-Regular.otf);
 }
 
-/* Global Style */
 body {
     font-family: Calibri, sans-serif;
     font-size: 1.2rem;
@@ -21,7 +20,6 @@ body {
     padding: 0;
 }
 
-/* Header */
 header {
     background-color: var(--background);
     font-weight: normal;
@@ -29,7 +27,6 @@ header {
     font-size: 2rem;
 }
 
-/* Layout */
 .container {
     width: clamp(300px, 85vw, 1000px);
     margin: 0 auto;
@@ -71,21 +68,11 @@ h3 {
     font-family: CathyCodes, Calibri, sans-serif;
 }
 
-.role-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 0.25rem;
-}
 
-.dates {
-    font-size: 1rem;
-    color: #6b7280;
-    white-space: nowrap;
-    font-style: italic;
-}
+/* ------------------ */
+/* FOOTER STYLES      */
+/* ------------------ */
 
-/* Footer */
 .footer {
     text-align: center;
     padding: 1.5rem;
@@ -101,52 +88,6 @@ h3 {
 .footer a {
     text-decoration: none;
 }
-
-/*certifications*/
-.cert-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    margin-top: 1rem;
-}
-
-.cert-card {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 0.5rem 0;
-}
-
-.cert-badge {
-    width: 100px;
-    height: auto;
-    transition: transform 0.2s ease;
-}
-
-.cert-badge-link:hover .cert-badge {
-    transform: scale(1.05);
-}
-
-.cert-info {
-    flex: 1;
-}
-
-.cert-meta {
-    margin: 0 0 0.5rem 0;
-    font-size: 0.85rem;
-    color: #4b5563;
-}
-
-.verify-link {
-    font-size: 0.85rem;
-    color: var(--header);
-    text-decoration: none;
-}
-
-.verify-link:hover {
-    text-decoration: underline;
-}
-
 
 /* ---------------------- */
 /* NAVIGATION BAR STYLES  */
@@ -170,32 +111,6 @@ h3 {
     padding: .5rem;
 }
 
-/* ---------------------- */
-/* PDF DISPLAY            */
-/* ---------------------- */
-
-
-.pdf-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 1rem;
-    text-align: center;
-}
-
-.pdf-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.viewer {
-    width: 100%;
-    min-height: 60vh;
-    border: 2px solid var(--title);
-    border-radius: 6px;
-}
-
 /* ------------------------- */
 /* DESKTOP SPECIFIC BEHAVIOR */
 /* ------------------------- */
@@ -215,62 +130,10 @@ h3 {
         font-weight: 500;
     }
 
-    .viewer {
-        min-height: 600px;
-    }
-
     /* Don't display hamburger bar on desktop */
     .hamburger {
         display: none;
     }
-}
-
-/* ==========================================
-   Retro Terminal Container Styles
-   ========================================== */
-
-/* Outer wrapper to center the terminal on the page */
-.terminal-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0.5rem;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Force the terminal container to take specific or full dimensions */
-.terminal {
-    width: clamp(300px, 95vw, 900px);
-    background-color: #111111;
-    border: 6px solid #00ff00;
-    border-radius: 6px;
-    box-sizing: border-box;
-}
-
-/* Ensures Xterm internal canvas fits inside the border bounds perfectly */
-#terminal .xterm {
-    height: 100%;
-    padding: 1rem;
-}
-
-/* Custom scrollbar matching retro dark theme */
-#terminal .xterm-viewport::-webkit-scrollbar {
-    width: 8px;
-}
-
-#terminal .xterm-viewport::-webkit-scrollbar-track {
-    background: #111111;
-}
-
-#terminal .xterm-viewport::-webkit-scrollbar-thumb {
-    background: #008800;
-    border-radius: 4px;
-}
-
-#terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
-    background: #00ff00;
 }
 
 /* ------------------------ */
@@ -328,20 +191,5 @@ h3 {
     .change .bar3 {
         transform: translate(0, -8px) rotate(45deg);
     }
-
-    .cert-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .cert-header {
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .terminal {
-        width: 90vw;
-    }
-
+    
 }
