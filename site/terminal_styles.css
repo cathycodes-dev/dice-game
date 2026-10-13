@@ -3,6 +3,8 @@
 /* ------------------------ */
 
 .terminal-container {
+    width: clamp(300px, 75vw, 700px);
+    margin: 2rem auto;
     background-color: var(--icons);
     border: 3px solid var(--header);
     border-radius: 8px;
