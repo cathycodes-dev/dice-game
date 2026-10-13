@@ -74,8 +74,8 @@
         const projectBasePath = './src';
 
         async function loadPythonModules(pyodide) {
+            term.write(`Loading supporting Python modules...\r\n ${pythonModules.join(', ')}\r\n`);
             for (const file of pythonModules) {
-                term.write(`Loading module: ${file}...\r\n`);
                 const response = await fetch(`${projectBasePath}/${file}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch ${file} (HTTP ${response.status})`);
