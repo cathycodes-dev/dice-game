@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  validate:
+  validate-test:
+    name: "Validate & Test"
     runs-on: ubuntu-latest
     env:
       working-directory: terraform
@@ -33,7 +34,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Linting Tools
+      - name: Install Dependencies
         run: python -m pip install --upgrade pip -r requirements.txt
 
       - name: Check Import Sorting (isort)
