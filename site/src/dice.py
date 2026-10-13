@@ -1,6 +1,8 @@
 import random as r
-import constants as c
 from collections import Counter, OrderedDict
+
+import constants as c
+
 
 class Dice:
     def __init__(self):
@@ -89,7 +91,11 @@ class Dice:
 
         if i == 1:
             print("No available scores. Press 0 to view zero-score options.")
-        self.zeros = [category for category in self.zeros if current_scores.get(category, None) is None]
+        self.zeros = [
+            category
+            for category in self.zeros
+            if current_scores.get(category, None) is None
+        ]
         if len(self.zeros) > 0:
             print("    or #0 -- to view the areas where you can score zero points")
 

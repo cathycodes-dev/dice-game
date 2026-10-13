@@ -1,6 +1,6 @@
-import player as p
 import asyncio
 
+import player as p
 from async_helper import input_async
 
 
@@ -10,7 +10,9 @@ async def play_game():
     numPlayers = -1
     while not 0 <= numPlayers <= 4:
         try:
-            val = await input_async("How many human players are there?  (choose a number 0-4): ")
+            val = await input_async(
+                "How many human players are there?  (choose a number 0-4): "
+            )
             numPlayers = int(val)
         except ValueError:
             print("Error must type in a number value")
@@ -23,7 +25,9 @@ async def play_game():
     if maxAI > 0:
         while numAI is None:
             try:
-                val = await input_async(f"How many AI's do you want to play against?  (choose a number 0-{maxAI}): ")
+                val = await input_async(
+                    f"How many AI's do you want to play against?  (choose a number 0-{maxAI}): "
+                )
                 numAI = int(val)
             except ValueError:
                 print("Error must type in a number value")
@@ -31,7 +35,7 @@ async def play_game():
                 if numAI > maxAI or numAI < 0:
                     print(f"Please enter a number between 0 and {maxAI}")
                     numAI = None
-    else: 
+    else:
         numAI = 0
 
     players = []
@@ -53,6 +57,7 @@ async def play_game():
     for player in players:
         print(f"Final score for {player.name}:")
         print(player.print_score_card())
+
 
 if __name__ == "__main__":
     asyncio.run(play_game())

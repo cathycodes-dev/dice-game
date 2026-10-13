@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  validate:
+  validate-test:
+    name: "Validate & Test"
     runs-on: ubuntu-latest
     env:
       working-directory: terraform
@@ -27,3 +28,23 @@ jobs:
         run: terraform fmt -check
         working-directory: ${{ env.working-directory }}
         continue-on-error: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: python -m pip install --upgrade pip -r requirements.txt
+
+      - name: Check Import Sorting (isort)
+        run: isort --settings-path pyproject.toml --check --diff site/src/
+        working-directory: .
+
+      - name: Check Formatting (black)
+        run: black --check --diff site/src/
+        working-directory: .
+
+      - name: Run Pytest
+        run: pytest
+        working-directory: .
