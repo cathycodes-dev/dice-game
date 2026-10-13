@@ -1,5 +1,5 @@
-import sys
 import asyncio
+import sys
 
 # Check if running inside Pyodide / WebAssembly environment
 IS_PYODIDE = "pyodide" in sys.modules
@@ -14,6 +14,7 @@ if IS_PYODIDE:
         return await js.readTerminalInput()
 
 else:
+
     async def input_async(prompt_str=""):
         # Local terminal: run standard synchronous input() inside an async thread executor
         loop = asyncio.get_running_loop()

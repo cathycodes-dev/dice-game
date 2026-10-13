@@ -1,10 +1,9 @@
+import asyncio
+
+import constants as c
 
 import dice as d
-import constants as c
 from async_helper import input_async
-
-
-import asyncio
 
 
 class Player:
@@ -82,8 +81,8 @@ class Player:
                     print(f"# {j} -- {x}")
                     j += 1
                 try:
-                    int_for_zero = int(await
-                        input_async(
+                    int_for_zero = int(
+                        await input_async(
                             "Which do you want to score? (0 to return to other scoring options)"
                         )
                     )
@@ -126,7 +125,7 @@ class AI(Player):
                 if score >= max_score:
                     max_score = score
                     max_category = category
-            
+
         if max_category is not None:
             print(f"AI {self.name} scores {max_score} in {max_category}")
             self.scores[max_category] = max_score
@@ -137,4 +136,4 @@ class AI(Player):
                 if self.scores.get(category, None) is None:
                     print(f"{self.name} scores 0 in {category}")
                     self.scores[category] = 0
-        return 
+        return
